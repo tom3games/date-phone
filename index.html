@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<script id="ghMove">if(location.hostname==='tom3games.github.io'){location.replace('https://tom3games.com/play/date-phone/'+location.search+location.hash)}</script>
+<link rel="canonical" href="https://tom3games.com/play/date-phone/">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>デート中のスマホ、バレたら冷める｜通知を我慢するバカゲー</title>
+<meta name="description" content="初デートのディナー中、スマホの通知が鳴りやまない。彼女が目をそらした隙に通知を片づけ、話もちゃんと聞く。見つかるとろうそくが消えていく。デート中にスマホをいじると冷めるのか、遊んで確かめるブラウザゲーム。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="デート中のスマホ、バレたら冷める">
+<meta property="og:description" content="通知は鳴る。彼女は話す。どっちも見たい。目をそらした隙にスマホ、見つかったらろうそくが消える。">
+<meta property="og:image" content="https://tom3games.com/play/date-phone/og.png?v=1">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://tom3games.com/play/date-phone/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1a1210">
+<link rel="icon" href="img/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@600&family=Zen+Old+Mincho:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=1">
+<script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
+<script>window.__bootN=0;window.__bootStep=function(){var n=++window.__bootN,b=document.getElementById('bootBar');if(b)b.style.transform='scaleX('+Math.min(1,n/9)+')'}</script>
+<link rel="modulepreload" href="vendor/three.core.min.js" onload="__bootStep()">
+<link rel="modulepreload" href="vendor/three.module.min.js" onload="__bootStep()">
+<link rel="modulepreload" href="js/game.js?v=1" onload="__bootStep()">
+<link rel="modulepreload" href="js/look.js?v=1" onload="__bootStep()">
+<link rel="preload" as="image" href="img/h_talk.webp" onload="__bootStep()">
+</head>
+<body>
+<canvas id="view"></canvas>
+<div id="flash"></div>
+
+<main id="vTitle" hidden>
+  <div class="menucard title">
+    <p class="mc-top">本日のふたり席</p>
+    <h1><span id="t1"></span><b id="t2"></b></h1>
+    <p class="mc-rule"></p>
+    <p class="tsub" id="tSub"></p>
+  </div>
+  <div class="tbtns">
+    <button id="bStart" class="go"></button>
+    <div class="row"><button id="bHow" class="small"></button><button id="bLang" class="small"></button></div>
+  </div>
+</main>
+
+<main id="vHow" hidden>
+  <div class="menucard how">
+    <h2 id="howH"></h2>
+    <ol id="howRules"></ol>
+    <p class="warn" id="howWarn"></p>
+    <button id="bHowClose" class="go small2"></button>
+    <p class="foot"><a id="lPrivacy" href="privacy.html" target="_blank" rel="noopener"></a><span id="howCredit"></span></p>
+  </div>
+</main>
+
+<main id="vPlay" hidden>
+  <div id="course" aria-hidden="true"><b>19:00</b><ol><li></li><li></li><li></li><li></li></ol></div>
+  <div id="banner" aria-hidden="true"></div>
+  <div id="bubble" class="bubble" hidden></div>
+  <div id="hint" class="hint" hidden></div>
+  <div id="pile" aria-hidden="true"></div>
+  <div id="pileN" hidden></div>
+  <div id="hand" aria-hidden="true" hidden><svg viewBox="0 0 120 70"><path d="M2 40c10-6 26-10 40-10l30 2c8 0 14 2 22 6l18 2c4 1 5 6 1 7l-22 1c2 3 2 7-2 8l-6 1c2 3 0 7-4 7H44C26 64 12 60 2 56z" fill="#f2c9a6" stroke="#2a1b12" stroke-width="3.5" stroke-linejoin="round"/><path d="M84 44l-18 1M80 52l-14 0" stroke="#2a1b12" stroke-width="2.6" stroke-linecap="round"/><path d="M0 36h22v26H0z" fill="#3b4c6b" stroke="#2a1b12" stroke-width="3.5"/></svg></div>
+  <button id="phoneHit" aria-label="phone" hidden></button>
+  <div id="chips" hidden></div>
+  <div id="upZone" hidden></div>
+  <div id="phone" aria-hidden="true">
+    <button id="upBtn"></button>
+    <div class="ph-in">
+      <div class="ph-bar"><span id="pTime">19:00</span><i class="ph-notch"></i><span class="ph-batt"><i></i></span></div>
+      <div class="ph-head"><span class="ph-logo"><svg viewBox="0 0 40 24"><path d="M2 12C8 3 32 3 38 12 32 21 8 21 2 12z" fill="#fff"/><circle cx="20" cy="12" r="6.5" fill="#ff7a3d"/><circle cx="20" cy="12" r="2.6" fill="#2a1b12"/></svg></span><b id="pApp"></b><span class="ph-likes"><svg viewBox="0 0 32 30"><path d="M16 28C-6 14 4-4 16 7 28-4 38 14 16 28z" fill="#e5484d"/></svg><span id="pLikes">0</span></span></div>
+      <div id="feed"></div>
+      <button id="shoot" hidden></button>
+    </div>
+  </div>
+</main>
+
+<div id="cutin" aria-hidden="true"><img alt=""></div>
+
+<main id="vResult" hidden>
+  <div class="cardbox" id="cardBox"><canvas id="card" width="720" height="1080"></canvas></div>
+  <div class="rbtns"><button id="bSave" class="small"></button><a id="bPost" class="small" target="_blank" rel="noopener"></a></div>
+  <div class="rrow"><button id="bAgain" class="go"></button></div>
+</main>
+
+<button id="bMute" aria-label="音" hidden><svg viewBox="0 0 32 32"><path d="M5 12h6l7-6v20l-7-6H5z" fill="currentColor"/><path id="mWave" d="M22 11q4 5 0 10M25 8q7 8 0 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path id="mX" d="M22 12l8 8M30 12l-8 8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
+
+<div id="boot">
+  <svg viewBox="0 0 200 150" aria-hidden="true">
+    <ellipse cx="100" cy="128" rx="92" ry="14" fill="#efe6d6"/>
+    <g class="flame"><path d="M100 30c10 16 12 30 0 38-12-8-10-22 0-38z" fill="#ffc24d"/><path d="M100 46c5 8 5 15 0 19-5-4-5-11 0-19z" fill="#fff6d8"/></g>
+    <rect x="92" y="68" width="16" height="50" rx="3" fill="#f8f1e2" stroke="#3a2418" stroke-width="3"/>
+    <path d="M84 118h32l-3 10H87z" fill="#c9a35a" stroke="#3a2418" stroke-width="3" stroke-linejoin="round"/>
+    <g class="buzz"><rect x="138" y="104" width="44" height="20" rx="5" fill="#2b2d33" stroke="#111" stroke-width="2.5" transform="rotate(-8 160 114)"/><path d="M134 96l-6-6M188 96l6-6" stroke="#9cc0fa" stroke-width="3" stroke-linecap="round"/></g>
+  </svg>
+  <p id="bootMsg">お席をご用意しています</p>
+  <div class="boot-bar"><i id="bootBar"></i></div>
+</div>
+
+<script>
+(function(){var o={passive:false};
+['gesturestart','gesturechange','gestureend'].forEach(function(n){document.addEventListener(n,function(e){e.preventDefault()},o)});
+document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},o);
+var l=0;document.addEventListener('touchend',function(e){var n=Date.now();if(n-l<300&&!(e.target.closest&&e.target.closest('button,a,#view,#upZone')))e.preventDefault();l=n},o);
+document.addEventListener('dblclick',function(e){e.preventDefault()},o);
+window.addEventListener('wheel',function(e){if(e.ctrlKey)e.preventDefault()},o);
+window.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&['+','-','=','0',';'].indexOf(e.key)>=0)e.preventDefault()});
+try{var q=new URLSearchParams(location.search).get('lang');if((q||localStorage.getItem('dp_lang')||((navigator.language||'ja').indexOf('ja')==0?'ja':'en'))=='en')document.getElementById('bootMsg').textContent='Getting your table ready'}catch(e){}
+setTimeout(function(){window.__bootTimeout=!window.__bootDone;document.getElementById('boot').classList.add('gone')},12000);
+var errs=[];window.addEventListener('error',function(e){errs.push((e.message||(e.target&&(e.target.src||e.target.href))||'error')+(e.filename?' @'+e.filename+':'+e.lineno:''))},true);
+window.addEventListener('unhandledrejection',function(e){errs.push('reject: '+String(e.reason&&e.reason.message||e.reason))});
+setTimeout(function(){if(window.__jsUp)return;var d=document.createElement('div');d.id='bootErr';d.textContent='起動できませんでした / failed to start\n'+(errs.join('\n')||'(no error captured)')+'\n'+navigator.userAgent;document.body.appendChild(d)},15000)})();
+</script>
+<script src="tm.js?v=1" data-game="date-phone"></script>
+<script src="sfx.js?v=1"></script>
+<script src="data.js?v=1"></script>
+<script type="module" src="js/game.js?v=1"></script>
+<script src="support.js?v=1" data-ja="デザート" data-en="a dessert"></script>
+</body>
+</html>

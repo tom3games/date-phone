@@ -1,0 +1,163 @@
+[hidden]{display:none!important}
+:root{--ink:#2a1b12;--cream:#f7efe0;--wine:#7a1424;--gold:#c9a35a;--blue:#3478f6}
+*{box-sizing:border-box;margin:0;padding:0}
+html{touch-action:manipulation;-webkit-text-size-adjust:100%;text-size-adjust:100%;background:#1a1210;height:100%}
+body{height:100%;overflow:hidden;color:var(--ink);font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",system-ui,sans-serif;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+button,a{font-family:inherit;color:inherit;touch-action:manipulation;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button{border:0;background:none}
+#view{position:fixed;inset:0;width:100vw;height:100svh;display:block;touch-action:none}
+#flash{position:fixed;inset:0;pointer-events:none;background:#fff;opacity:0;z-index:15}
+main{position:fixed;inset:0;height:100svh;overflow:hidden;z-index:3}
+
+/* タイトル: テーブルに立てたコースのメニュー */
+#vTitle{display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 62px) 16px calc(env(safe-area-inset-bottom) + 4svh);pointer-events:none;background:linear-gradient(rgba(20,12,10,.55),rgba(20,12,10,0) 42%,rgba(20,12,10,0) 62%,rgba(20,12,10,.7))}
+#vTitle button{pointer-events:auto}
+.menucard{position:relative;background:#f7efe0;color:var(--ink);font-family:"Zen Old Mincho","Hiragino Mincho ProN",serif;box-shadow:0 12px 30px rgba(0,0,0,.5);outline:1.5px solid rgba(122,20,36,.55);outline-offset:-9px}
+.menucard.title{width:min(84vw,330px);padding:20px 22px 18px;text-align:center;transform:rotate(-1.2deg)}
+.mc-top{font-family:"Klee One",sans-serif;font-size:14px;color:var(--wine)}
+.menucard h1{font-weight:700;line-height:1.15;margin-top:8px}
+.menucard h1 span{display:block;font-size:clamp(17px,5vw,20px)}
+.menucard h1 b{display:block;font-size:clamp(26px,7.8vw,33px);color:var(--wine);letter-spacing:-.02em;margin-top:4px;word-break:keep-all}
+html[lang=en] .menucard h1 b{font-size:clamp(28px,8.6vw,36px)}
+.mc-rule{width:60%;height:1px;background:rgba(122,20,36,.5);margin:12px auto 10px}
+.tsub{font-family:"Klee One",sans-serif;font-size:clamp(14px,4vw,16px);line-height:1.45;color:#5b3a2c;word-break:keep-all;text-wrap:balance}
+.tbtns{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%}
+.tbtns .row{display:flex;gap:10px}
+/* いちばん押してほしいボタンだけ厚み（ワインレッドの札） */
+.go{font-family:"Zen Old Mincho",serif;font-weight:700;font-size:22px;min-width:220px;min-height:58px;padding:0 28px;border-radius:6px;background:#8e1b2c;color:#fbecd2;box-shadow:0 5px 0 #4a0b15,0 8px 16px rgba(0,0,0,.4);letter-spacing:.08em}
+.go:active{transform:translateY(4px);box-shadow:0 1px 0 #4a0b15}
+.small{font-size:14px;min-height:42px;padding:0 16px;border-radius:21px;background:rgba(247,239,224,.92);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+
+/* 遊び方: メニューの中のページ */
+#vHow{display:flex;align-items:center;justify-content:center;background:rgba(14,9,7,.62);padding:16px}
+.menucard.how{width:min(400px,100%);max-height:calc(100svh - 32px);padding:18px 20px 10px;display:flex;flex-direction:column;gap:10px}
+.menucard.how h2{font-size:22px;text-align:center;color:var(--wine);letter-spacing:.2em}
+#howRules{list-style:none;display:flex;flex-direction:column;gap:10px}
+#howRules li{display:flex;align-items:center;gap:10px;font-family:"Hiragino Sans",sans-serif;font-size:clamp(12.5px,3.6vw,14px);line-height:1.4}
+#howRules img{flex:none;width:clamp(50px,14vw,64px);height:clamp(50px,14vw,64px);object-fit:cover;object-position:50% 12%;border-radius:50%;background:#ead9bf}
+#howRules b{display:block;word-break:keep-all;font-family:"Zen Old Mincho",serif;font-size:clamp(16px,4.8vw,19px);color:var(--wine)}
+.menucard .warn{word-break:keep-all;font-family:"Klee One",sans-serif;font-size:14px;line-height:1.45;text-align:center;color:#5b3a2c}
+.small2{font-size:19px;min-height:50px;min-width:160px;align-self:center}
+.foot{word-break:keep-all;display:flex;flex-direction:column;align-items:center;font-family:"Hiragino Sans",sans-serif;font-size:10px;color:#7a6e60;text-align:center;line-height:1.35}
+.foot a{display:inline-flex;align-items:center;min-height:32px;padding:0 10px;color:#3a5a8a;font-size:12px}
+
+/* 遊び中 */
+#vPlay{pointer-events:none}
+/* コースの進み具合（テーブルのメニュー札） */
+#course{position:absolute;left:12px;top:calc(env(safe-area-inset-top) + 10px);background:#f7efe0;padding:7px 10px 8px;font-family:"Zen Old Mincho",serif;box-shadow:0 4px 10px rgba(0,0,0,.45);transform:rotate(-2deg);outline:1px solid rgba(122,20,36,.45);outline-offset:-4px}
+#course b{display:block;font-size:17px;color:var(--wine);letter-spacing:.04em}
+#course ol{list-style:none;font-size:12px;line-height:1.4;color:#a89a88}
+#course li.on{color:var(--ink);font-weight:700}
+#course li.on::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--wine);margin:0 4px 1px 0}
+#course li.done{text-decoration:line-through;text-decoration-color:rgba(122,20,36,.5)}
+#banner{position:absolute;left:0;right:0;top:56svh;padding:6px 0;background:linear-gradient(90deg,transparent,rgba(20,12,10,.72) 20%,rgba(20,12,10,.72) 80%,transparent);text-align:center;font-family:"Zen Old Mincho",serif;font-size:clamp(28px,8vw,36px);color:#fbecd2;text-shadow:0 2px 0 #000,0 0 14px rgba(0,0,0,.8);opacity:0;pointer-events:none;letter-spacing:.2em}
+#banner.on{animation:banner 1.6s ease-out forwards}
+@keyframes banner{0%{opacity:0;transform:translateY(8px)}15%{opacity:1;transform:none}75%{opacity:1}100%{opacity:0}}
+
+/* 彼女の吹き出し */
+.bubble{position:absolute;left:0;top:0;background:#fff;color:#1c1712;font-family:"Klee One",sans-serif;font-size:clamp(17px,5vw,20px);line-height:1.25;padding:7px 13px;border-radius:14px;box-shadow:2px 4px 8px rgba(0,0,0,.35);border:2.5px solid #1c1712;width:max-content;max-width:min(80vw,320px);white-space:normal;word-break:keep-all;overflow-wrap:anywhere;animation:pop .16s ease-out;z-index:3}
+.bubble::after{content:"";position:absolute;left:var(--tail,50%);bottom:-13px;margin-left:-7px;border:7px solid transparent;border-top:10px solid #1c1712}
+.bubble.fact{background:#fff8e6}
+.bubble.q{background:#fff;border-color:var(--wine);color:var(--wine);font-size:clamp(18px,5.4vw,22px)}
+.bubble.cold{background:#e6eef6;border-color:#2c4f78;color:#1f3a5c}
+.bubble.muffled{background:#ece8e2;color:#8e857a;border-color:#8e857a;font-style:normal;filter:blur(.4px)}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.hint{position:absolute;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom) + 34svh);text-align:center;font-family:"Klee One",sans-serif;font-size:clamp(18px,5.4vw,22px);line-height:1.25;color:#fff;text-shadow:0 2px 0 #000,0 0 10px #000,0 0 3px #000;white-space:pre-line;z-index:4;pointer-events:none}
+.hint.over{bottom:calc(52svh + 64px)}
+.hint.over,.hint.warn{left:50%;right:auto;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 32px);padding:6px 14px;border-radius:10px;background:rgba(14,9,7,.72)}
+.hint.warn{color:#ffd36a;font-size:clamp(22px,6.4vw,27px)}
+
+/* 伏せたスマホ: 押す所・通知の山・手 */
+#phoneHit{position:absolute;width:140px;height:150px;pointer-events:auto;touch-action:none;z-index:2}
+#pile{position:absolute;width:110px;height:0;pointer-events:none}
+#pile i{position:absolute;left:calc(var(--k) * 3px);bottom:calc(var(--k) * 17px);width:96px;height:22px;border-radius:7px;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.4);opacity:0;transform:translateY(10px) scale(.7);transition:opacity .2s,transform .2s;border-left:5px solid #ff7a3d}
+#pile i::after{content:"";position:absolute;left:8px;right:22px;top:8px;height:5px;border-radius:3px;background:#c9c3bb}
+#pile i[data-g="1"]{border-left-color:#e5b23a;background:#fff6dc}
+#pile i.on{opacity:1;transform:none}
+#pileN{position:absolute;padding:2px 9px;border-radius:12px;background:#e5484d;color:#fff;font-weight:700;font-size:15px;box-shadow:0 2px 5px rgba(0,0,0,.4);pointer-events:none}
+#pileN.hot{animation:hot .4s ease-in-out infinite alternate}
+@keyframes hot{to{transform:scale(1.2)}}
+#hand{position:absolute;left:0;top:0;width:150px;height:88px;pointer-events:none;will-change:transform;transform-origin:20% 60%}
+#hand svg{width:100%;height:100%;filter:drop-shadow(0 4px 4px rgba(0,0,0,.45))}
+
+/* 答え（自分の返事の吹き出し） */
+#chips{position:absolute;left:16px;width:min(60vw,250px);bottom:calc(env(safe-area-inset-bottom) + 18svh);display:flex;flex-direction:column;gap:9px;pointer-events:auto;z-index:4}
+#chips::before{content:"";display:block;height:4px;border-radius:2px;background:linear-gradient(90deg,#fbecd2 calc(var(--left,1) * 100%),rgba(255,255,255,.2) 0);margin-bottom:2px}
+.chip{min-height:48px;padding:6px 16px;border-radius:24px 24px 24px 6px;background:#fbecd2;color:var(--ink);font-family:"Klee One",sans-serif;font-size:clamp(17px,5vw,20px);text-align:left;box-shadow:0 3px 8px rgba(0,0,0,.45);border:2px solid #5b3a2c;animation:pop .18s ease-out backwards}
+.chip:nth-child(3){animation-delay:.05s}.chip:nth-child(4){animation-delay:.1s}
+.chip:active{background:#f3d9b0}
+
+/* 手に持ったスマホ */
+#upZone{position:absolute;left:0;right:0;top:0;height:48svh;pointer-events:auto;z-index:4}
+#phone{position:absolute;left:50%;bottom:-12px;width:min(88vw,360px);height:calc(52svh + 12px);margin-left:calc(min(88vw,360px) / -2);transform:translateY(105%);transition:transform .17s ease-out;z-index:5;pointer-events:none;
+  background:#16171b;border-radius:38px 38px 0 0;padding:10px 10px 0;box-shadow:0 -8px 30px rgba(0,0,0,.55)}
+#phone.up{transform:none;pointer-events:auto}
+#phone:not(.up) #upBtn{visibility:hidden}
+#phone.danger{box-shadow:0 -8px 30px rgba(0,0,0,.55),0 0 0 4px rgba(229,72,77,.9),0 0 40px rgba(229,72,77,.6)}
+#phone.force{animation:force .12s linear 6}
+@keyframes force{50%{transform:translateX(4px)}}
+.ph-in{position:relative;height:100%;border-radius:30px 30px 0 0;background:#faf7f2;overflow:hidden;display:flex;flex-direction:column}
+.ph-bar{flex:none;height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:13px;font-weight:700;color:#111}
+.ph-notch{width:86px;height:22px;border-radius:12px;background:#16171b}
+.ph-batt{width:24px;height:12px;border:1.5px solid #111;border-radius:3px;padding:1px}.ph-batt i{display:block;height:100%;width:38%;background:#e5484d;border-radius:1px}
+#upBtn{position:absolute;right:6px;top:-56px;min-height:44px;padding:0 18px;border-radius:22px;background:rgba(20,14,12,.82);color:#fbecd2;font-size:15px;font-weight:700;border:1.5px solid rgba(251,236,210,.6);white-space:nowrap}
+.ph-head{flex:none;display:flex;align-items:center;gap:7px;padding:4px 14px 8px;border-bottom:1px solid #e9e3da}
+.ph-logo{width:34px;height:26px;border-radius:8px;background:#ff7a3d;display:flex;align-items:center;justify-content:center}.ph-logo svg{width:26px}
+.ph-head b{font-size:18px;letter-spacing:.02em;color:#2a1b12}
+.ph-likes{margin-left:auto;display:flex;align-items:center;gap:4px;font-weight:800;font-size:19px;color:#2a1b12}.ph-likes svg{width:20px;height:19px}
+#feed{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;gap:6px;padding:8px 8px 70px}
+.card{flex:none;display:flex;align-items:center;gap:9px;min-height:54px;padding:6px 10px;border-radius:14px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.14);text-align:left;animation:cardIn .2s ease-out}
+.card .av{flex:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px}
+.card .tx{flex:1;min-width:0;display:flex;flex-direction:column;font-size:13.5px;line-height:1.3;color:#3a332c}
+.card .tx b{font-size:13px;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .tx span{overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.card img{flex:none;width:44px;height:44px;object-fit:cover;border-radius:8px;background:#f1e8db}
+.card em{flex:none;font-style:normal;font-weight:800;font-size:15px;color:#e5484d;min-width:30px;text-align:right}
+.card.gold{background:#fff4d6;box-shadow:0 0 0 2px #e5b23a}
+.card.mom .av{background:#8a7b6a!important}
+.card.sys .av{background:#ff7a3d!important}
+.card:active{transform:scale(.97)}
+@keyframes cardIn{from{transform:translateY(-14px);opacity:0}to{transform:none;opacity:1}}
+#shoot{position:absolute;left:12px;right:12px;bottom:12px;min-height:52px;border-radius:26px;background:#2a1b12;color:#fff;font-weight:800;font-size:17px;box-shadow:0 4px 10px rgba(0,0,0,.3);animation:pop .2s ease-out}
+.likepop{position:fixed;z-index:9;transform:translate(-50%,0);font-style:normal;font-weight:900;font-size:20px;color:#e5484d;text-shadow:0 1px 0 #fff;pointer-events:none;animation:likepop .8s ease-out forwards}
+.likepop.gold{color:#c98a12;font-size:24px}
+@keyframes likepop{to{transform:translate(-50%,-34px);opacity:0}}
+
+/* 大ゴマ（見つかった・まぎらわしい答え） */
+#cutin{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 25svh);width:min(60vw,240px);aspect-ratio:1;margin-left:calc(min(60vw,240px) / -2);pointer-events:none;opacity:0;z-index:7;
+  background:repeating-conic-gradient(from 0deg,#e6eef6 0 6deg,#b9cbe0 6deg 12deg);clip-path:polygon(50% 0,61% 12%,78% 4%,80% 22%,98% 24%,88% 40%,100% 54%,84% 62%,92% 80%,72% 80%,64% 98%,50% 86%,36% 98%,28% 80%,8% 80%,16% 62%,0 54%,12% 40%,2% 24%,20% 22%,22% 4%,39% 12%)}
+#cutin img{position:absolute;left:12%;top:10%;width:76%;height:82%;object-fit:contain}
+#cutin.on{animation:cutin 1.1s ease-out forwards}
+@keyframes cutin{0%{opacity:0;transform:scale(.3) rotate(-12deg)}14%{opacity:1;transform:scale(1.1) rotate(3deg)}24%{transform:scale(1) rotate(-1deg)}78%{opacity:1;transform:scale(1.03)}100%{opacity:0;transform:scale(1.12)}}
+
+#bMute{position:fixed;z-index:6;right:12px;top:calc(env(safe-area-inset-top) + 12px);width:42px;height:42px;border-radius:21px;background:rgba(20,14,12,.55);color:#fff;display:flex;align-items:center;justify-content:center}
+#bMute svg{width:24px;height:24px}
+#bMute.off #mWave{display:none}#bMute:not(.off) #mX{display:none}
+
+/* 結果: スクリーンタイムの画面 */
+#vResult{background:#2a1d18;display:flex;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top) + 10px) 12px calc(env(safe-area-inset-bottom) + 6px);gap:8px}
+#card{flex:none;display:block;border-radius:18px;box-shadow:0 8px 22px rgba(0,0,0,.5)}
+.cardbox{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center}
+.rbtns{display:flex;gap:12px;flex:none}
+.rrow{display:flex;flex:none}
+#vResult .go{min-height:50px;font-size:19px}
+
+/* 読み込み: ろうそくと震えるスマホ */
+#boot{position:fixed;inset:0;z-index:20;background:#1a1210;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .4s;color:#f2e6cf}
+#boot.gone{opacity:0;pointer-events:none}
+#boot svg{width:170px}
+#boot .flame{transform-origin:100px 66px;animation:flick 1.2s ease-in-out infinite}
+@keyframes flick{30%{transform:scale(.92,1.06) skewX(3deg)}60%{transform:scale(1.04,.96) skewX(-2deg)}}
+#boot .buzz{animation:bz 1.6s linear infinite}
+@keyframes bz{0%,60%,100%{transform:none}64%{transform:translateX(-2px)}68%{transform:translateX(2px)}72%{transform:translateX(-2px)}76%{transform:translateX(2px)}}
+#boot p{font-family:"Klee One",sans-serif;font-size:18px}
+.boot-bar{width:160px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden}
+.boot-bar i{display:block;height:100%;background:#c9a35a;transform:scaleX(0);transform-origin:0 50%;transition:transform .25s}
+#bootErr{position:fixed;left:8px;right:8px;bottom:8px;z-index:30;background:#fff;color:#b00;font:12px/1.4 monospace;white-space:pre-wrap;padding:10px;border-radius:8px}
+@media (max-height:700px){
+  .menucard.title{padding:10px 16px 10px;width:min(80vw,300px)}.menucard h1{margin-top:4px}.menucard h1 span{font-size:15px}.menucard h1 b{font-size:clamp(22px,6.6vw,26px)}.mc-rule{margin:8px auto 6px}.tsub{font-size:13px}.go{min-height:50px}
+  #vTitle{padding-top:calc(env(safe-area-inset-top) + 56px)}
+  #howRules img{width:44px;height:44px}.menucard.how{gap:6px;padding:12px 16px 8px}
+  #howRules li{font-size:12px}.menucard .warn{font-size:12.5px}
+  .card{min-height:46px;padding:4px 8px}.card img{width:36px;height:36px}
+}

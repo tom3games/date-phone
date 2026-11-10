@@ -1,0 +1,29 @@
+# 素材の出所（音は全部録音。Gravity Sound の3本は CC BY 4.0 で遊び方の画面にも名前を出している。曲は CC0 を選んで使用）
+
+- snd/amb_rest.mp3: File:Restaurant ambience.ogg（15〜53秒を継ぎ目なしループ36秒に） / stephan / Public domain
+- snd/bgm_bossa.mp3: Bossa Shop Theme, in Low-Fi and HD / SpringySpringo / CC-BY 3.0,CC0
+- snd/notif1.mp3: File:Notification_Gravity_Sound.wav / Gravity Sound / CC BY 4.0
+- snd/notif2.mp3: File:Notification_2_Gravity_Sound.wav / Gravity Sound / CC BY 4.0
+- snd/notif3.mp3: File:Notification_4_Gravity_Sound.wav / Gravity Sound / CC BY 4.0
+- snd/buzz1.mp3: File:Mobile_phone_interference.ogg (切り出し) / Ezwa / Public domain
+- snd/buzz2.mp3: File:Mobile_phone_interference.ogg (切り出し) / Ezwa / Public domain
+- snd/buzz3.mp3: File:Mobile_phone_interference.ogg (切り出し) / Ezwa / Public domain
+- snd/shutter.mp3: Camera / themightyglider / CC0
+- snd/cut1.mp3: File:Cutlery on table.ogg（切り出し） / thore / Public domain
+- snd/dish1.mp3: 100 CC0 SFX / rubberduck / CC0
+- snd/dish2.mp3: 100 CC0 SFX / rubberduck / CC0
+- snd/clink1.mp3: 100 CC0 SFX / rubberduck / CC0
+- snd/clink2.mp3: 100 CC0 SFX / rubberduck / CC0
+- snd/step1.mp3: 100 CC0 SFX #2 / rubberduck / CC0
+- snd/step2.mp3: 100 CC0 SFX #2 / rubberduck / CC0
+- snd/applause.mp3: Applause in a large hall or church / eXpl0it3r / CC0
+- snd/giggle.mp3: Group giggling / Nocturnal_Vanguard / CC0
+- snd/cloth.mp3: 50 RPG sound effects / Kenney / CC0
+- snd/paper.mp3: 100 CC0 SFX / rubberduck / CC0
+- snd/click.mp3: Interface Sounds / Kenney / CC0
+- snd/j_good.mp3: 85 Short music jingles / Kenney / CC0
+- snd/j_mid.mp3: 85 Short music jingles / Kenney / CC0
+- snd/j_bad.mp3: 85 Short music jingles / Kenney / CC0
+- snd/j_buzz.mp3: 85 Short music jingles / Kenney / CC0
+- snd/cut2.mp3: File:Cutlery on table.ogg（切り出し） / thore / Public domain
+- snd/cut3.mp3: File:Cutlery on table.ogg（切り出し） / thore / Public domain
