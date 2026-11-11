@@ -346,10 +346,15 @@ export function createFx(scene, camera, renderer, o = {}) {
       const z = zoomT < zoomD ? zoomK * Math.sin(Math.PI * Math.min(1, zoomT / zoomD)) * (zoomT < zoomD * 0.3 ? 1 : 1) : 0
       const nz = 1 + z
       if (cam.zoom !== nz) { cam.zoom = nz; cam.updateProjectionMatrix() }
+      // viewBot: X のアプリ内ブラウザの下の帯。その分を除いた高さで構図を作って上に詰める
+      const bot = cam.userData.viewBot || 0
       if (sk > 0.0005) {
         const s = new THREE.Vector2(); renderer.getSize(s)
         const px = sk * Math.min(s.x, s.y)
-        cam.setViewOffset(s.x, s.y, Math.sin(time * 83) * px, Math.cos(time * 71) * px * 0.8, s.x, s.y)
+        cam.setViewOffset(s.x, s.y - bot, Math.sin(time * 83) * px, Math.cos(time * 71) * px * 0.8, s.x, s.y)
+      } else if (bot) {
+        const s = new THREE.Vector2(); renderer.getSize(s); const v = cam.view
+        if (!v || !v.enabled || v.offsetX || v.offsetY || v.fullHeight !== s.y - bot || v.height !== s.y) cam.setViewOffset(s.x, s.y - bot, 0, 0, s.x, s.y)
       } else if (cam.view && cam.view.enabled) cam.clearViewOffset()
     },
   }

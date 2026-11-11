@@ -3,7 +3,7 @@
 // 見られている時に画面を見ているとろうそく（彼女の気分）が消えていく。スマホを見ていた間の話は聞こえず、あとで聞かれる。
 // 通知をためすぎると手が勝手にスマホをつかむ。仕様の正本は ~/Desktop/claudecode/ideas/date-phone.md。文言は data.js
 import * as THREE from 'three'
-import { setupLook, surfaceTex, look, createFx } from './look.js?v=1'
+import { setupLook, surfaceTex, look, createFx } from './look.js?v=2'
 window.__jsUp = true
 const DP = window.DP
 const $ = id => document.getElementById(id)
@@ -177,9 +177,14 @@ function resize() {
   renderer.setSize(w, h, false); camera.aspect = a
   const hf = 44 * Math.PI / 180
   camera.fov = clamp(2 * Math.atan(Math.tan(hf / 2) / a) * 180 / Math.PI, 46, 86)
+  // X のアプリ内ブラウザ: 下の帯の分を除いた高さで構図を作り、上に詰めて描く（伏せたスマホが帯に入らない）
+  const bot = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--inapp-bot')) || 0
+  camera.userData.viewBot = bot > 0 && h - bot > 200 ? bot : 0
+  if (camera.userData.viewBot) { camera.aspect = w / (h - bot); camera.fov = clamp(2 * Math.atan(Math.tan(hf / 2) / camera.aspect) * 180 / Math.PI, 46, 86); camera.setViewOffset(w, h - bot, 0, 0, w, h) }
+  else camera.clearViewOffset()
   camera.updateProjectionMatrix()
 }
-addEventListener('resize', resize); resize()
+addEventListener('resize', resize); resize(); addEventListener('load', resize)
 
 // ============================================================ 遊びの状態（sim でも同じ処理を回す）
 const TUT_KEY = 'dp_tut1'
@@ -598,6 +603,8 @@ function tableDom(dt) {
   const p = phoneXY(), W = innerWidth
   const hit = $('phoneHit'), n = unreadN()
   hit.style.left = Math.round(p.x - 70) + 'px'; hit.style.top = Math.round(p.y - 90) + 'px'
+  // X のアプリ内ブラウザでは、押せる所を下の帯の手前で切る
+  if (camera.userData.viewBot) hit.style.height = Math.round(clamp(innerHeight - camera.userData.viewBot - (p.y - 90), 60, 150)) + 'px'
   hit.hidden = G.up || G.mode !== 'play' || !!G.over
   // 通知の山: 伏せたスマホの上に積み上がる
   const pile = $('pile')

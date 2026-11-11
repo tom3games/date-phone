@@ -10,7 +10,7 @@ button{border:0;background:none}
 main{position:fixed;inset:0;height:100svh;overflow:hidden;z-index:3}
 
 /* タイトル: テーブルに立てたコースのメニュー */
-#vTitle{display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 62px) 16px calc(env(safe-area-inset-bottom) + 4svh);pointer-events:none;background:linear-gradient(rgba(20,12,10,.55),rgba(20,12,10,0) 42%,rgba(20,12,10,0) 62%,rgba(20,12,10,.7))}
+#vTitle{display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 62px) 16px calc(calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px)) + 4svh);pointer-events:none;background:linear-gradient(rgba(20,12,10,.55),rgba(20,12,10,0) 42%,rgba(20,12,10,0) 62%,rgba(20,12,10,.7))}
 #vTitle button{pointer-events:auto}
 .menucard{position:relative;background:#f7efe0;color:var(--ink);font-family:"Zen Old Mincho","Hiragino Mincho ProN",serif;box-shadow:0 12px 30px rgba(0,0,0,.5);outline:1.5px solid rgba(122,20,36,.55);outline-offset:-9px}
 .menucard.title{width:min(84vw,330px);padding:20px 22px 18px;text-align:center;transform:rotate(-1.2deg)}
@@ -62,7 +62,7 @@ html[lang=en] .menucard h1 b{font-size:clamp(28px,8.6vw,36px)}
 .bubble.cold{background:#e6eef6;border-color:#2c4f78;color:#1f3a5c}
 .bubble.muffled{background:#ece8e2;color:#8e857a;border-color:#8e857a;font-style:normal;filter:blur(.4px)}
 @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
-.hint{position:absolute;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom) + 34svh);text-align:center;font-family:"Klee One",sans-serif;font-size:clamp(18px,5.4vw,22px);line-height:1.25;color:#fff;text-shadow:0 2px 0 #000,0 0 10px #000,0 0 3px #000;white-space:pre-line;z-index:4;pointer-events:none}
+.hint{position:absolute;left:16px;right:16px;bottom:calc(calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px)) + 34svh);text-align:center;font-family:"Klee One",sans-serif;font-size:clamp(18px,5.4vw,22px);line-height:1.25;color:#fff;text-shadow:0 2px 0 #000,0 0 10px #000,0 0 3px #000;white-space:pre-line;z-index:4;pointer-events:none}
 .hint.over{bottom:calc(52svh + 64px)}
 .hint.over,.hint.warn{left:50%;right:auto;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 32px);padding:6px 14px;border-radius:10px;background:rgba(14,9,7,.72)}
 .hint.warn{color:#ffd36a;font-size:clamp(22px,6.4vw,27px)}
@@ -81,7 +81,7 @@ html[lang=en] .menucard h1 b{font-size:clamp(28px,8.6vw,36px)}
 #hand svg{width:100%;height:100%;filter:drop-shadow(0 4px 4px rgba(0,0,0,.45))}
 
 /* 答え（自分の返事の吹き出し） */
-#chips{position:absolute;left:16px;width:min(60vw,250px);bottom:calc(env(safe-area-inset-bottom) + 18svh);display:flex;flex-direction:column;gap:9px;pointer-events:auto;z-index:4}
+#chips{position:absolute;left:16px;width:min(60vw,250px);bottom:calc(calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px)) + 18svh);display:flex;flex-direction:column;gap:9px;pointer-events:auto;z-index:4}
 #chips::before{content:"";display:block;height:4px;border-radius:2px;background:linear-gradient(90deg,#fbecd2 calc(var(--left,1) * 100%),rgba(255,255,255,.2) 0);margin-bottom:2px}
 .chip{min-height:48px;padding:6px 16px;border-radius:24px 24px 24px 6px;background:#fbecd2;color:var(--ink);font-family:"Klee One",sans-serif;font-size:clamp(17px,5vw,20px);text-align:left;box-shadow:0 3px 8px rgba(0,0,0,.45);border:2px solid #5b3a2c;animation:pop .18s ease-out backwards}
 .chip:nth-child(3){animation-delay:.05s}.chip:nth-child(4){animation-delay:.1s}
@@ -96,6 +96,9 @@ html[lang=en] .menucard h1 b{font-size:clamp(28px,8.6vw,36px)}
 #phone.danger{box-shadow:0 -8px 30px rgba(0,0,0,.55),0 0 0 4px rgba(229,72,77,.9),0 0 40px rgba(229,72,77,.6)}
 #phone.force{animation:force .12s linear 6}
 @keyframes force{50%{transform:translateX(4px)}}
+/* X のアプリ内ブラウザ: 持ったスマホの下端を帯の上に置く（上端の位置はそのまま） */
+html.inapp-x #phone{bottom:calc(var(--inapp-bot,0px) - 12px);height:calc(52svh + 12px - var(--inapp-bot,0px))}
+html.inapp-x #phone:not(.up){transform:translateY(calc(105% + var(--inapp-bot,0px)))}
 .ph-in{position:relative;height:100%;border-radius:30px 30px 0 0;background:#faf7f2;overflow:hidden;display:flex;flex-direction:column}
 .ph-bar{flex:none;height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:13px;font-weight:700;color:#111}
 .ph-notch{width:86px;height:22px;border-radius:12px;background:#16171b}
@@ -135,7 +138,7 @@ html[lang=en] .menucard h1 b{font-size:clamp(28px,8.6vw,36px)}
 #bMute.off #mWave{display:none}#bMute:not(.off) #mX{display:none}
 
 /* 結果: スクリーンタイムの画面 */
-#vResult{background:#2a1d18;display:flex;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top) + 10px) 12px calc(env(safe-area-inset-bottom) + 6px);gap:8px}
+#vResult{background:#2a1d18;display:flex;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top) + 10px) 12px calc(calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px)) + 6px);gap:8px}
 #card{flex:none;display:block;border-radius:18px;box-shadow:0 8px 22px rgba(0,0,0,.5)}
 .cardbox{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center}
 .rbtns{display:flex;gap:12px;flex:none}
