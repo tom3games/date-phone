@@ -7,7 +7,7 @@ import { spawn } from 'node:child_process'
 import { mkdirSync } from 'node:fs'
 const ROOT = import.meta.dirname
 mkdirSync(ROOT + '/shots', { recursive: true })
-const PORT = 5437
+const PORT = Number(process.env.VPORT || 5437)
 const server = spawn(process.execPath, ['server.mjs'], { cwd: ROOT, env: { ...process.env, PORT: String(PORT) } })
 await new Promise(r => setTimeout(r, 400))
 const URL0 = `http://localhost:${PORT}/`
@@ -52,7 +52,8 @@ const variance = (p, sel) => p.evaluate(sel => {
 const st = p => p.evaluate(() => dp.state)
 const tick = (p, sec) => p.evaluate(n => { dp.dbg.tick(n); dp.dbg.render() }, Math.round(sec * 60))
 // 本物の指: 要素の座標を取ってタップ
-async function settle(p) { await p.waitForTimeout(260) }
+// CSS の移り変わり（スマホを持ち上げる .17s など）が終わるまで待つ。実時間の固定待ちだと負荷で途中を測る
+async function settle(p) { await p.waitForTimeout(60); await p.waitForFunction(() => !document.getAnimations().some(a => a.constructor.name === 'CSSTransition' && a.playState === 'running'), null, { timeout: 15000 }) }
 async function tap(p, xy) { expect(xy && xy.x > 0 && xy.y > 0, 'no target ' + JSON.stringify(xy)); if (p.__touch) await p.touchscreen.tap(xy.x, xy.y); else await p.mouse.click(xy.x, xy.y) }
 async function until(p, f, maxSec = 60, arg) { for (let i = 0; i < maxSec * 10; i++) { if (await p.evaluate(f, arg)) return true; await p.evaluate(() => { dp.dbg.tick(6); dp.dbg.render() }) } return false }
 
@@ -143,7 +144,7 @@ await t('同時に出る文字は2つまで', async () => {
 })
 await t('通知をためると手が勝手につかむ（指で伏せようとしても少しの間は伏せられない・そのあと伏せられる）', async () => {
   // 前のテストで置いていかれていても、この確認は新しい回でやる
-  await p.evaluate(() => { if (dp.state.over || dp.state.mode !== 'play') { dp.dbg.startPlay(false); dp.dbg.pause(); dp.dbg.tick(120) } dp.dbg.G.temp = 80; if (dp.state.up) dp.putDown(); for (let i = 0; i < 9; i++) dp.dbg.notify() }); await tick(p, 0.05); await p.waitForTimeout(260)
+  await p.evaluate(() => { if (dp.state.over || dp.state.mode !== 'play') { dp.dbg.startPlay(false); dp.dbg.pause(); dp.dbg.tick(120) } dp.dbg.G.temp = 80; if (dp.state.up) dp.putDown(); for (let i = 0; i < 9; i++) dp.dbg.notify() }); await tick(p, 0.05); await settle(p)
   const a = await st(p)
   expect(a.up, 'not grabbed ' + JSON.stringify({ mode: a.mode, over: a.over, unread: a.unread, up: a.up, vplay: await p.evaluate(() => document.getElementById('vPlay').hidden) }))
   await tap(p, await p.evaluate(() => { const r = document.getElementById('upBtn').getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 } }))
@@ -153,10 +154,11 @@ await t('通知をためると手が勝手につかむ（指で伏せようと�
   expect(a.up && a.grabs >= 1 && b.up && !c.up, JSON.stringify({ a: a.up, g: a.grabs, b: b.up, c: c.up }))
 })
 await t('最後まで進んで結果が出る（スクリーンタイムの画像に何か描かれている）', async () => {
-  await p.evaluate(() => { window.__lastResult = null; dp.dbg.G.bot = null; dp.dbg.G.temp = 80; if (dp.dbg.G.forceT > 0) dp.dbg.G.forceT = 0; dp.putDown(); dp.dbg.pause(false); dp.dbg.speed(12) })
-  await p.evaluate(() => { const B = window.dp; window.__botTimer = setInterval(() => { const s = B.state; if (s.mode !== 'play') return; if (s.q) { if (s.up) B.putDown(); else B.answer(s.q.opts.indexOf('right')) } else if (s.up && s.look !== 'away' && s.look !== 'gone' && s.force <= 0) B.putDown(); else if (!s.up && (s.look === 'away' || s.look === 'gone') && s.unread) B.pickUp(); else if (s.up && s.unread) B.tapCard() }, 30) })
-  await p.waitForFunction(() => window.__lastResult, null, { timeout: 60000 })
-  await p.evaluate(() => clearInterval(window.__botTimer))
+  // 実時間の setInterval の bot を12倍速で走らせると、負荷で bot が遅れて点が0になる。時間を止めて 0.1 秒ごとに判断しながらコマで進める
+  const n = await p.evaluate(() => { window.__lastResult = null; dp.dbg.G.bot = null; dp.dbg.G.temp = 80; if (dp.dbg.G.forceT > 0) dp.dbg.G.forceT = 0; dp.putDown(); dp.dbg.pause(); const B = window.dp; let i = 0
+    for (; i < 60 * 900 && B.state.mode === 'play'; i++) { if (i % 6 === 0) { const s = B.state; if (s.q) { if (s.up) B.putDown(); else B.answer(s.q.opts.indexOf('right')) } else if (s.up && s.look !== 'away' && s.look !== 'gone' && s.force <= 0) B.putDown(); else if (!s.up && (s.look === 'away' || s.look === 'gone') && s.unread) B.pickUp(); else if (s.up && s.unread) B.tapCard() } dp.dbg.tick(1) }
+    dp.dbg.render(); return i })
+  await p.waitForFunction(() => window.__lastResult, null, { timeout: 30000 }); await p.evaluate(() => dp.dbg.pause(false))
   const v = await variance(p, '#card'); const r = await p.evaluate(() => window.__lastResult)
   await p.screenshot({ path: ROOT + '/shots/result-ja.png' })
   expect(v > 200 && r.points > 0, v); return { v, verdict: r.verdict, points: r.points, likes: r.likes, temp: r.temp }
@@ -243,13 +245,13 @@ for (const [w, h, name] of [[360, 640, 'small'], [390, 844, 'phone'], [430, 932,
   await q.evaluate(() => { dp.dbg.pause(); dp.dbg.startPlay(false); dp.dbg.tick(60 * 4); dp.dbg.render() })
   views.play = await fit(q); await q.screenshot({ path: `${ROOT}/shots/fit-${name}-play.png` })
   const geo = await q.evaluate(() => { const ph = dp.phoneXY(), hd = dp.dbg.headXY(); return { ph, hd, H: innerHeight, W: innerWidth } })
-  await q.evaluate(() => { dp.dbg.calm(); for (let i = 0; i < 5; i++) dp.dbg.notify(); dp.pickUp(); dp.dbg.tick(30); dp.dbg.render() }); await q.waitForTimeout(250)
+  await q.evaluate(() => { dp.dbg.calm(); for (let i = 0; i < 5; i++) dp.dbg.notify(); dp.pickUp(); dp.dbg.tick(30); dp.dbg.render() }); await settle(q)
   views.phone = await fit(q); await q.screenshot({ path: `${ROOT}/shots/fit-${name}-phone.png` })
   const up = await q.evaluate(() => ({ top: document.getElementById('phone').getBoundingClientRect().top, eye: dp.dbg.toScreen(new (dp.dbg.camera.position.constructor)(0, 1.22, -0.82)).y, upBtn: document.getElementById('upBtn').getBoundingClientRect(), card: dp.cardXY(0) }))
-  await q.evaluate(() => { dp.putDown(); let n = 0; while (!dp.state.q && n++ < 9000) dp.dbg.tick(1); dp.dbg.tick(20); dp.dbg.render() }); await q.waitForTimeout(250)
+  await q.evaluate(() => { dp.putDown(); let n = 0; while (!dp.state.q && n++ < 9000) dp.dbg.tick(1); dp.dbg.tick(20); dp.dbg.render() }); await settle(q)
   views.q = await fit(q); await q.screenshot({ path: `${ROOT}/shots/fit-${name}-q.png` })
   const chips = await q.evaluate(() => [0, 1, 2].map(i => dp.chipXY(i)))
-  await q.evaluate(() => dp.dbg.leave()); await q.evaluate(() => dp.dbg.pause(false)); await q.waitForFunction(() => window.__lastResult, null, { timeout: 15000 }); await q.waitForTimeout(400)
+  await q.evaluate(() => dp.dbg.leave()); await q.evaluate(() => dp.dbg.pause(false)); await q.waitForFunction(() => window.__lastResult, null, { timeout: 15000 }); await q.waitForTimeout(400); await settle(q)
   views.result = await fit(q); await q.screenshot({ path: `${ROOT}/shots/fit-${name}-result.png` })
   for (const [v, r] of Object.entries(views)) await t(`一画面に収まる ${name} ${w}x${h} ${v}`, async () => { expect(!r.over.length, JSON.stringify(r)) })
   await t(`${name}: 伏せたスマホ・答え・顔を上げるボタンが画面の中`, async () => {
